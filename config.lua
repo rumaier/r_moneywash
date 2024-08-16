@@ -67,7 +67,7 @@ Cfg = {
     --  \__,_|\___|_.__/ \__,_|\__, |
     --                         |___/
     Debug = {
-        Prints = true,  -- Debug prints (true: enabled, false: disabled)
-        Targets = true, -- Debug targets (true: enabled, false: disabled)
+        Prints = false,  -- Debug prints (true: enabled, false: disabled)
+        Targets = false, -- Debug targets (true: enabled, false: disabled)
     }
 }
