@@ -3,10 +3,10 @@ fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
 
-name 'base'
-description 'base for r_scripts resources'
+name 'r_moneywash'
+description 'A simple money wash system for FiveM'
 author 'r_scripts'
-version '0.9.9'
+version '1.0.0'
 
 shared_scripts {
     '@ox_lib/init.lua',
