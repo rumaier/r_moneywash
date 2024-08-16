@@ -2,9 +2,6 @@ local entities = {}
 local cfg = Cfg.Options
 
 local function taskNpcGiveEnvelope()
-    local envelopeProp = 'prop_cash_envelope_01'
-    entities.envelope = CreateProp(envelopeProp, cfg.Location, 0.0, false)
-    AttachEntityToEntity(entities.envelope, entities.npc, GetPedBoneIndex(entities.npc, 28422), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, true, true, false, true, 2, true)
     PlayAnim(entities.npc, 'mp_common', 'givetake1_a', 1000, 0, 0.0)
     PlayAnim(cache.ped, 'mp_common', 'givetake1_a', 1000, 0, 0.0)
     SetTimeout(1000, function()
@@ -41,6 +38,9 @@ lib.callback.register('r_moneywash:startWashingProgressBar', function()
         }) then
         PlayAnim(entities.npc, 'melee@holster', 'holster', 750, 0, 0.0)
         SetTimeout(500, function()
+            local envelopeProp = 'prop_cash_envelope_01'
+            entities.envelope = CreateProp(envelopeProp, cfg.Location, 0.0, false)
+            AttachEntityToEntity(entities.envelope, entities.npc, GetPedBoneIndex(entities.npc, 28422), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, true, true, false, true, 2, true)        
             DeleteEntity(entities.cash)
             taskNpcGiveEnvelope()
         end)
@@ -60,7 +60,7 @@ local function taskGiveNpcMoney(amount, metadata)
     TriggerServerEvent('r_moneywash:startWashingMoney', cache.serverId, amount, metadata)
     debug('[DEBUG] - Money given, starting exchange')
     SetTimeout(750, function()
-        AttachEntityToEntity(entities.cash, entities.npc, GetPedBoneIndex(entities.npc, 28422), 0.003, 0.008, 0.015, 44.108, 29.315, 20.733, true, true, false, true, 2, true)
+        AttachEntityToEntity(entities.cash, entities.npc, GetPedBoneIndex(entities.npc, 28422), 0, 0, 0, 168.93, -83.80, 76.29, true, true, false, true, 2, true)
     end)
 end
 
