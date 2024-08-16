@@ -10,6 +10,7 @@ Language['en'] = { -- English
     -- Notifications
     on_cooldown = 'You just washed money, come back later.',
     washed_money = 'You washed $%s and received $%s after a %s%% tax deduction.',
+    not_enough_money = 'You do not have enough money to wash.',
 
     -- Progress Bars
     entering_moneywash = 'Entering Money Wash...',

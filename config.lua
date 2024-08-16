@@ -57,9 +57,8 @@ Cfg = {
     --  \ V  V /  __/ |_) | | | | (_) | (_) |   <
     --   \_/\_/ \___|_.__/|_| |_|\___/ \___/|_|\_\
     Webhook = {
-        Enabled = true,                                                                                                                    -- Webhook Logs (true: enabled, false: disabled)
-        Url =
-        'https://discord.com/api/webhooks/1270615006710333460/5dOVPYlyzBTDS3jzu0so6tppeeHuGGPocYaDog4mZha0lFinioTiPv9Qbo06MSfjaaSC',       -- Webhook URL
+        Enabled = true,            -- Webhook Logs (true: enabled, false: disabled)
+        Url = 'YOUR_WEBHOOK_HERE', -- Webhook URL
     },
     --      _      _
     --   __| | ___| |__  _   _  __ _

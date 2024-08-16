@@ -19,16 +19,18 @@ local function taskNpcGiveEnvelope()
 end
 
 lib.callback.register('r_moneywash:startWashingProgressBar', function()
-    PlayAnim(entities.npc, 'anim@amb@casino@peds@', 'amb_world_human_leaning_male_wall_back_texting_idle_a', -1, 0, 0.0)
-    CreateThread(function()
-        Wait(100) -- Wait for the animation to start
-        while true do 
-            if not IsEntityPlayingAnim(entities.npc, 'anim@amb@casino@peds@', 'amb_world_human_leaning_male_wall_back_texting_idle_a', 3) then
-                PlayAnim(entities.npc, 'anim@amb@casino@peds@', 'amb_world_human_leaning_male_wall_back_texting_idle_a', -1, 0, 0.0)
-                break
+    SetTimeout(750, function()
+        PlayAnim(entities.npc, 'anim@amb@casino@peds@', 'amb_world_human_leaning_male_wall_back_texting_idle_a', -1, 0, 0.0)
+        CreateThread(function()
+            Wait(100) -- Wait for the animation to start
+            while true do
+                if not IsEntityPlayingAnim(entities.npc, 'anim@amb@casino@peds@', 'amb_world_human_leaning_male_wall_back_texting_idle_a', 3) then
+                    PlayAnim(entities.npc, 'anim@amb@casino@peds@', 'amb_world_human_leaning_male_wall_back_texting_idle_a', -1, 0, 0.0)
+                    break
+                end
+                Wait(0)
             end
-            Wait(0)
-        end
+        end)
     end)
     if lib.progressCircle({
             duration = cfg.WashTime * 1000,
@@ -55,10 +57,10 @@ local function taskGiveNpcMoney(amount, metadata)
     AttachEntityToEntity(entities.cash, cache.ped, 90, 0.003, 0.008, 0.015, 44.108, 29.315, 20.733, true, true, false, true, 2, true)
     PlayAnim(cache.ped, 'mp_common', 'givetake1_a', 1000, 0, 0.0)
     PlayAnim(entities.npc, 'mp_common', 'givetake1_a', 1000, 0, 0.0)
+    TriggerServerEvent('r_moneywash:startWashingMoney', cache.serverId, amount, metadata)
+    debug('[DEBUG] - Money given, starting exchange')
     SetTimeout(750, function()
         AttachEntityToEntity(entities.cash, entities.npc, GetPedBoneIndex(entities.npc, 28422), 0.003, 0.008, 0.015, 44.108, 29.315, 20.733, true, true, false, true, 2, true)
-        TriggerServerEvent('r_moneywash:startWashingMoney', cache.serverId, amount, metadata)
-        debug('[DEBUG] - Money given, starting exchange')
     end)
 end
 
@@ -104,12 +106,12 @@ local function buildMarkedBillsMenu()
 end
 
 local function openMoneyWashInput()
-    ClearPedTasks(entities.npc)
-    PlayPedAmbientSpeechNative(entities.npc, 'GENERIC_HOWS_IT_GOING', 'SPEECH_PARAMS_FORCE')
     local playerCash = lib.callback.await('r_moneywash:getInventoryItem', false, cfg.Currency)
+    if playerCash.count < cfg.MinWash then return Framework.Notify(_L('not_enough_money', cfg.MinWash), 'error') end
     if playerCash.count > cfg.MaxWash then playerCash.count = cfg.MaxWash end
+    PlayPedAmbientSpeechNative(entities.npc, 'GENERIC_HOWS_IT_GOING', 'SPEECH_PARAMS_FORCE')
     local input = lib.inputDialog(_L('wash_money'), {
-        { type = 'number', label = _L('wash_amount'), icon = 'dollar-sign', required = true, min = 1, max = playerCash.count },
+        { type = 'number', label = _L('wash_amount'), icon = 'dollar-sign', required = true, min = cfg.MinWash, max = playerCash.count },
     })
     if not input then return end
     giveExchangeOffer(tonumber(input[1]))
