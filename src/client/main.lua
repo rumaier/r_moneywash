@@ -90,6 +90,7 @@ local function buildMarkedBillsMenu()
                 title = item.label,
                 description = _L('marked_worth', item.metadata.worth),
                 icon = 'fas fa-money-bill-wave',
+                iconColor = '#fa5252',
                 onSelect = function()
                     giveExchangeOffer(item.count, item.metadata)
                 end,
