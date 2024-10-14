@@ -214,7 +214,7 @@ function locPoint:onExit()
     for _, entity in pairs(entities) do
         if DoesEntityExist(entity) then DeleteEntity(entity) end
     end
-    Target.RemoveLocalEntity(entities.npc)
+    Core.Target.RemoveLocalEntity(entities.npc)
     debug('[DEBUG] - NPC Removed')
 end
 
