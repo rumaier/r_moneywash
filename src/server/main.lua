@@ -9,7 +9,12 @@ lib.callback.register('r_moneywash:getPlayerInventory', function(src)
     return Core.Inventory.GetInventoryItems(src)
 end)
 
+lib.callback.register('r_moneywash:getInventoryItem', function(src, item)
+    return Core.Inventory.GetItem(src, item)
+end)
+
 lib.callback.register('r_moneywash:getPlayerCooldown', function(src)
+    print('r_moneywash:getPlayerCooldown')
     local identifier = Core.Framework.GetPlayerIdentifier(src)
     return (cooldowns[identifier] ~= nil) or false
 end)

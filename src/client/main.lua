@@ -198,9 +198,10 @@ function locPoint:onEnter()
     Core.Target.AddLocalEntity(entities.npc, { {
         label = _L('wash_money'),
         icon = 'fas fa-money-bill-wave',
-        distance = 1,
+        distance = 2,
         onSelect = function()
             local onCooldown = lib.callback.await('r_moneywash:getPlayerCooldown', false)
+            print(onCooldown)
             if onCooldown then Framework.Notify(_L('on_cooldown'), 'info') return end
             if Cfg.Options.Currency == 'markedbills' then return buildMarkedBillsMenu() end
             openMoneyWashInput()
