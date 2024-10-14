@@ -37,7 +37,7 @@ Cfg = {
 
         Currency = 'black_money',                   -- Currency item (supports items or qb-core 'markedbills')
         TaxRate = 25,                               -- Tax rate. (0 - 100) if DynamicTax is enabled, this value will be ignored.
-        DynacmicTax = true,                         -- Changing tax rate (true: enabled, false: disabled)
+        DynamicTax = true,                          -- Changing tax rate (true: enabled, false: disabled)
         DynamicTimer = 60,                          -- Tax rate change timer (minutes)
         DynamicRange = { 15, 35 },                  -- Range for changing tax rate { min, max }
         WashTime = 10,                              -- Wash time (seconds)
@@ -66,8 +66,5 @@ Cfg = {
     -- | (_| |  __/ |_) | |_| | (_| |
     --  \__,_|\___|_.__/ \__,_|\__, |
     --                         |___/
-    Debug = {
-        Prints = false,  -- Debug prints (true: enabled, false: disabled)
-        Targets = false, -- Debug targets (true: enabled, false: disabled)
-    }
+    Debug = false, -- Debug mode (true: enabled, false: disabled) - Do not enable this unless you know what you are doing.
 }

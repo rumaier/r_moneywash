@@ -6,27 +6,33 @@ lua54 'yes'
 name 'r_moneywash'
 description 'A simple money wash system for FiveM'
 author 'r_scripts'
-version '1.0.0'
+version '1.0.1'
 
 shared_scripts {
     '@ox_lib/init.lua',
+    'utils/shared.lua',
     'locales/*.lua',
-    'src/shared/*.lua',
     'config.lua',
 }
 
 server_scripts {
-    '@oxmysql/lib/MySQL.lua',
-    'bridge/**/server.lua',
+    'utils/server.lua',
     'src/server/*.lua',
 }
 
 client_scripts {
-    'bridge/**/client.lua',
+    'utils/client.lua',
     'src/client/*.lua',
 }
 
+
 dependencies {
     'ox_lib',
-    'oxmysql',
+    'r_bridge',
+}
+
+escrow_ignore {
+    'install/**/*.*',
+    'locales/*.*',
+    'config.*' 
 }
