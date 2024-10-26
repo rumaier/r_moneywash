@@ -162,7 +162,7 @@ RegisterNetEvent('r_moneywash:onConnect', function()
     if Cfg.Options.Blip.Enabled and not entities.blip then
         local location = Cfg.Options.Location
         if Cfg.Options.Teleporter.Enabled then location = Cfg.Options.Teleporter.Entrance.xyz end
-        entities.blip = Core.Natives.CreateBlip(location, Cfg.Options.Blip.Sprite, Cfg.Options.Blip.Scale, Cfg.Options.Blip.Color, 4, Cfg.Options.Blip.Label)
+        entities.blip = Core.Natives.CreateBlip(location, Cfg.Options.Blip.Sprite, Cfg.Options.Blip.Color, Cfg.Options.Blip.Scale, Cfg.Options.Blip.Label, true)
         debug('[DEBUG] - Blip Created')
     end
     if Cfg.Options.Teleporter.Enabled then
