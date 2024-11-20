@@ -108,7 +108,7 @@ end
 
 local function openMoneyWashInput()
     local playerCash = lib.callback.await('r_moneywash:getInventoryItem', false, Cfg.Options.Currency)
-    if playerCash.count < Cfg.Options.MinWash then return Framework.Notify(_L('not_enough_money', Cfg.Options.MinWash), 'error') end
+    if playerCash.count < Cfg.Options.MinWash then return Core.Framework.Notify(_L('not_enough_money', Cfg.Options.MinWash), 'error') end
     if playerCash.count > Cfg.Options.MaxWash then playerCash.count = Cfg.Options.MaxWash end
     PlayPedAmbientSpeechNative(entities.npc, 'GENERIC_HOWS_IT_GOING', 'SPEECH_PARAMS_FORCE')
     local input = lib.inputDialog(_L('wash_money'), {
