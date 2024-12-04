@@ -12,24 +12,14 @@ This script gives players a location with an NPC to exchange illegally obtained 
 - 💰 Supports QBCore "markedbills" metadata, as well as normal items.
 - 📝 Sends Discord Logs of all transactions for admin oversight.
 
-## Dependencies
-
-- [ox_lib](https://github.com/overextended/ox_lib/releases)
-- [ox_target](https://github.com/overextended/ox_target/releases) or [qb-target](https://github.com/qbcore-framework/qb-target)
-- [es_extended](https://github.com/esx-framework) or [qb-core](https://github.com/qbcore-framework)
-
-## Installation
-
-1. Download the script files
-2. Place them in your FiveM server's resources folder
-3. Ensure all dependencies are installed
-4. Add `ensure r_moneywash` to your server.cfg
-5. Restart Server and Enjoy!
-
 ## Documentation
 
-- [Gitbook](https://r-scripts-1.gitbook.io/r_scripts-docs./free-resources/r_moneywash)
+[Gitbook](https://r-scripts-1.gitbook.io/r_scripts-docs./free-resources/r_moneywash).
 
 ## Support
 
-- [Discord](https://discord.gg/r-scripts)
+[Discord](https://discord.gg/r-scripts).
+
+## License
+
+This resource is licensed under the GNU GPLv3 License. See the [LICENSE](LICENSE) file for more details.
