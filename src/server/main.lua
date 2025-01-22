@@ -26,7 +26,7 @@ local function setPlayerCooldown(src)
     SetTimeout(Cfg.Options.Cooldown * 60000, function()
         cooldowns[identifier] = nil
     end)
-    debug('[DEBUG] - '.. GetPlayerName(src) ..' has been set on cooldown for '.. Cfg.Options.Cooldown ..' minutes.')
+    _debug('[DEBUG] - '.. GetPlayerName(src) ..' has been set on cooldown for '.. Cfg.Options.Cooldown ..' minutes.')
 end
 
 local function givePlayerWashedMoney(src, amount)
@@ -34,7 +34,7 @@ local function givePlayerWashedMoney(src, amount)
     Core.Framework.AddAccountBalance(src, 'money', taxedAmount)
     Core.Framework.Notify(src, _L('washed_money', amount, taxedAmount, taxRate), 'success')
     SendWebhook(src, 'Money Washed', amount, taxedAmount, taxRate)
-    debug('[DEBUG] - '.. GetPlayerName(src) ..' has washed '.. amount ..' and received '.. taxedAmount ..' after tax.')
+    _debug('[DEBUG] - '.. GetPlayerName(src) ..' has washed '.. amount ..' and received '.. taxedAmount ..' after tax.')
 end
 
 RegisterNetEvent('r_moneywash:startWashingMoney', function(src, amount, metadata)
@@ -44,11 +44,11 @@ RegisterNetEvent('r_moneywash:startWashingMoney', function(src, amount, metadata
     local identifier = Core.Framework.GetPlayerIdentifier(src)
     local distance = #(Cfg.Options.Location - playerCoords)
     local removed = Core.Inventory.RemoveItem(src, Cfg.Options.Currency, amount, metadata)
-    if not removed then debug('[DEBUG] - Error removing currency from player', GetPlayerName(src)) return end
+    if not removed then _debug('[DEBUG] - Error removing currency from player', GetPlayerName(src)) return end
     local counted = lib.callback.await('r_moneywash:startWashingProgressBar', src, Cfg.Options.WashTime)
     if not counted then
         Core.Inventory.AddItem(src, Cfg.Options.Currency, amount, metadata)
-        debug('[DEBUG] - Error counting money for player', GetPlayerName(src))
+        _debug('[DEBUG] - Error counting money for player', GetPlayerName(src))
         return
     end
     if distance > 5.0 then DropPlayer(src, _L('cheater')) return end

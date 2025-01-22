@@ -9,7 +9,7 @@ local function taskNpcGiveEnvelope()
         SetTimeout(750, function()
             DeleteEntity(entities.envelope)
             PlayPedAmbientSpeechNative(entities.npc, 'GENERIC_THANKS', 'SPEECH_PARAMS_FORCE')
-            debug('[DEBUG] - Envelope given, player paid??')
+            _debug('[DEBUG] - Envelope given, player paid??')
         end)
     end)
 end
@@ -44,7 +44,7 @@ lib.callback.register('r_moneywash:startWashingProgressBar', function()
             DeleteEntity(entities.cash)
             taskNpcGiveEnvelope()
         end)
-        debug('[DEBUG] - Money counted, giving envelope')
+        _debug('[DEBUG] - Money counted, giving envelope')
         return true
     else
         return false
@@ -58,7 +58,7 @@ local function taskGiveNpcMoney(amount, metadata)
     Core.Natives.PlayAnim(cache.ped, 'mp_common', 'givetake1_a', 1000, 0, 0.0)
     Core.Natives.PlayAnim(entities.npc, 'mp_common', 'givetake1_a', 1000, 0, 0.0)
     TriggerServerEvent('r_moneywash:startWashingMoney', cache.serverId, amount, metadata)
-    debug('[DEBUG] - Money given, starting exchange')
+    _debug('[DEBUG] - Money given, starting exchange')
     SetTimeout(750, function()
         AttachEntityToEntity(entities.cash, entities.npc, GetPedBoneIndex(entities.npc, 28422), 0, 0, 0, 168.93, -83.80, 76.29, true, true, false, true, 2, true)
     end)
@@ -76,7 +76,7 @@ local function giveExchangeOffer(amount, metadata)
     })
     if confirm == 'cancel' then return PlayPedAmbientSpeechNative(entities.npc, 'GENERIC_INSULT_MED', 'SPEECH_PARAMS_FORCE') end
     taskGiveNpcMoney(amount, metadata)
-    debug('[DEBUG] - Exchange Offer Accepted')
+    _debug('[DEBUG] - Exchange Offer Accepted')
 end
 
 local function buildMarkedBillsMenu()
@@ -103,7 +103,7 @@ local function buildMarkedBillsMenu()
         options = options
     })
     lib.showContext('moneywash_markedbills')
-    debug('[DEBUG] - Marked Bills Menu Created')
+    _debug('[DEBUG] - Marked Bills Menu Created')
 end
 
 local function openMoneyWashInput()
@@ -163,7 +163,7 @@ RegisterNetEvent('r_moneywash:onConnect', function()
         local location = Cfg.Options.Location
         if Cfg.Options.Teleporter.Enabled then location = Cfg.Options.Teleporter.Entrance.xyz end
         entities.blip = Core.Natives.CreateBlip(location, Cfg.Options.Blip.Sprite, Cfg.Options.Blip.Color, Cfg.Options.Blip.Scale, Cfg.Options.Blip.Label, true)
-        debug('[DEBUG] - Blip Created')
+        _debug('[DEBUG] - Blip Created')
     end
     if Cfg.Options.Teleporter.Enabled then
         Core.Target.AddBoxZone('moneywash_entrance', Cfg.Options.Teleporter.Entrance.xyz, vec3(1.5, 1.0, 3.0), Cfg.Options.Teleporter.Entrance.w, { {
@@ -184,7 +184,7 @@ RegisterNetEvent('r_moneywash:onConnect', function()
                 exitMoneyWash(Cfg.Options.Teleporter.Exit, Cfg.Options.Teleporter.Entrance)
             end
         } })
-        debug('[DEBUG] - Teleporter Created')
+        _debug('[DEBUG] - Teleporter Created')
     end
 end)
 
@@ -207,7 +207,7 @@ function locPoint:onEnter()
             openMoneyWashInput()
         end
     } })
-    debug('[DEBUG] - NPC Created')
+    _debug('[DEBUG] - NPC Created')
 end
 
 function locPoint:onExit()
@@ -215,7 +215,7 @@ function locPoint:onExit()
         if DoesEntityExist(entity) then DeleteEntity(entity) end
     end
     Core.Target.RemoveLocalEntity(entities.npc)
-    debug('[DEBUG] - NPC Removed')
+    _debug('[DEBUG] - NPC Removed')
 end
 
 AddEventHandler('onResourceStart', function(resource)
