@@ -6,7 +6,7 @@ lua54 'yes'
 name 'r_moneywash'
 description 'A simple money wash system for FiveM'
 author 'r_scripts'
-version '1.0.5'
+version '1.0.6'
 
 shared_scripts {
     '@ox_lib/init.lua',
