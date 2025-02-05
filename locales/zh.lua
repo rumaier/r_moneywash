@@ -10,6 +10,7 @@ Language['zh'] = { -- Chinese
     -- 通知
     on_cooldown = '你刚刚洗过钱，稍后再来。',
     washed_money = '你洗了 $%s，扣除 %s%% 税后收到 $%s。',
+    not_enough_money = '你没有足够的钱来清洗。',
 
     -- 进度条
     entering_moneywash = '正在进入洗钱点...',

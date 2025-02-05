@@ -10,6 +10,7 @@ Language['fr'] = { -- French
     -- Notifications
     on_cooldown = 'Tu viens de blanchir de l’argent, reviens plus tard.',
     washed_money = 'Tu as blanchi $%s et reçu $%s après une déduction de %s%% pour les taxes.',
+    not_enough_money = 'Vous n’avez pas assez d’argent pour laver.',
 
     -- Barres de Progression
     entering_moneywash = 'Entrer dans le Blanchiment d’Argent...',

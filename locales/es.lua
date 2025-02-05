@@ -10,6 +10,7 @@ Language['es'] = { -- Spanish
     -- Notificaciones
     on_cooldown = 'Acabas de lavar dinero, vuelve más tarde.',
     washed_money = 'Lavaste $%s y recibiste $%s después de una deducción del %s%% en impuestos.',
+    not_enough_money = 'No tienes suficiente dinero para lavar',
 
     -- Barras de Progreso
     entering_moneywash = 'Entrando al Lavado de Dinero...',

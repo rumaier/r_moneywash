@@ -10,6 +10,7 @@ Language['de'] = { -- German
     -- Benachrichtigungen
     on_cooldown = 'Du hast gerade Geld gewaschen, komm später wieder.',
     washed_money = 'Du hast $%s gewaschen und nach einem Abzug von %s%% Steuern $%s erhalten.',
+    not_enough_money = 'Du hast nicht genug Geld, um zu waschen.',
 
     -- Fortschrittsbalken
     entering_moneywash = 'Betrete Geldwäsche...',
