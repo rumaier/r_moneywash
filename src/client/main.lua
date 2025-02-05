@@ -202,7 +202,7 @@ function locPoint:onEnter()
         onSelect = function()
             local onCooldown = lib.callback.await('r_moneywash:getPlayerCooldown', false)
             print(onCooldown)
-            if onCooldown then Framework.Notify(_L('on_cooldown'), 'info') return end
+            if onCooldown then Core.Framework.Notify(_L('on_cooldown'), 'info') return end
             if Cfg.Options.Currency == 'markedbills' then return buildMarkedBillsMenu() end
             openMoneyWashInput()
         end
