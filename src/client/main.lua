@@ -174,7 +174,7 @@ RegisterNetEvent('r_moneywash:onConnect', function()
             onSelect = function()
                 enterMoneyWash(Cfg.Options.Teleporter.Entrance, Cfg.Options.Teleporter.Exit)
             end
-        } })
+        } }, Cfg.Debug)
         Core.Target.AddBoxZone('moneywash_exit', Cfg.Options.Teleporter.Exit.xyz, vec3(1.4, 0.7, 2.1), Cfg.Options.Teleporter.Exit.w, { {
             label = _L('exit_moneywash'),
             name = 'moneywash_exit',
@@ -183,7 +183,7 @@ RegisterNetEvent('r_moneywash:onConnect', function()
             onSelect = function()
                 exitMoneyWash(Cfg.Options.Teleporter.Exit, Cfg.Options.Teleporter.Entrance)
             end
-        } })
+        } }, Cfg.Debug)
         _debug('[DEBUG] - Teleporter Created')
     end
 end)
