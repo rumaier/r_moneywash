@@ -14,11 +14,11 @@ This script gives players a location with an NPC to exchange illegally obtained 
 
 ## Documentation
 
-[Gitbook](https://r-scripts-1.gitbook.io/r_scripts-docs./free-resources/r_moneywash)
+[Gitbook](https://rscripts.gitbook.io/r_scripts-docs./free-resources/r_moneywash)
 
 ## Support
 
-[Discord](https://discord.gg/r-scripts)
+[Discord](https://discord.gg/rscripts)
 
 ## License
 
