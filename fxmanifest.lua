@@ -16,6 +16,7 @@ shared_scripts {
 }
 
 server_scripts {
+    'webhook.lua',
     'utils/server.lua',
     'src/server/*.lua',
 }

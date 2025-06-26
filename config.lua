@@ -51,15 +51,6 @@ Cfg = {
             Exit = vec4(1138.0793, -3199.1890, -39.6656, 180.42), -- Teleporter exit (vector4)
         },
     },
-    --               _     _                 _
-    -- __      _____| |__ | |__   ___   ___ | | __
-    -- \ \ /\ / / _ \ '_ \| '_ \ / _ \ / _ \| |/ /
-    --  \ V  V /  __/ |_) | | | | (_) | (_) |   <
-    --   \_/\_/ \___|_.__/|_| |_|\___/ \___/|_|\_\
-    Webhook = {
-        Enabled = true,            -- Webhook Logs (true: enabled, false: disabled)
-        Url = 'YOUR_WEBHOOK_HERE', -- Webhook URL
-    },
     --      _      _
     --   __| | ___| |__  _   _  __ _
     --  / _` |/ _ \ '_ \| | | |/ _` |
