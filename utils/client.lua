@@ -6,12 +6,3 @@ local onPlayerLoaded = framework == 'es_extended' and 'esx:playerLoaded' or 'QBC
 RegisterNetEvent(onPlayerLoaded, function()
     -- initialize shit when the player loads
 end)
-
-RegisterNUICallback('setGameFocus', function(_, cb) cb(SetNuiFocus(false, false)) end)
-
-RegisterNUICallback('getLocales', function(_, cb) cb(Language[Cfg.Server.Language]) end)
-
-RegisterNUICallback('getConfig', function(_, cb)
-    Cfg.Server.InventoryPath = Core.Inventory.IconPath
-    cb(Cfg)
-end)
