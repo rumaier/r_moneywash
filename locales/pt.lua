@@ -1,47 +1,14 @@
 Language = Language or {}
 Language['pt'] = { -- Portuguese
 
-    -- Opções de Alvo
-    enter_moneywash = 'Entrar na Lavagem de Dinheiro',
-    exit_moneywash = 'Sair da Lavagem de Dinheiro',
-
-    wash_money = 'Lavar Dinheiro',
-
-    -- Notificações
-    on_cooldown = 'Você acabou de lavar dinheiro, volte mais tarde.',
-    washed_money = 'Você lavou $%s e recebeu $%s após uma dedução de %s%% de impostos.',
-    not_enough_money = 'Você não tem dinheiro suficiente para lavar.',
-
-    -- Barras de Progresso
-    entering_moneywash = 'Entrando na Lavagem de Dinheiro...',
-    exiting_moneywash = 'Saindo da Lavagem de Dinheiro...',
-
-    giving_money = 'Entregando Dinheiro...',
-    counting_money = 'Contando Dinheiro...',
-
-    -- Títulos do Menu
-    money_wash = 'Lavagem de Dinheiro',
-
-    -- Opções do Menu
-    wash_amount = 'Quanto você quer lavar?',
-
-    -- Subtítulos do Menu
-    taxed_offer = 'Você receberá $%s após uma dedução de %s%% de impostos.',
-    marked_worth = 'Valor: $%s',
-
-    -- Webhook do Discord
+    -- Webhook
     player_id = 'ID do Jogador',
-    username = 'Nome de Usuário',
+    username = 'Nome de usuário',
     identifier = 'Identificador',
-    description = 'Descrição',
-    description_text = '%s lavou $%s e recebeu $%s após uma dedução de %s%% de impostos.',
 
-    -- Console do Servidor
-    version = '%s | v%s',
-    framework = 'Framework: %s',
-    inventory = 'Inventário: %s',
-    target = 'Alvo: %s',
-    cheater = 'Expulso por trapaça.',
-    update = 'Por favor, atualize %s para a versão mais recente do Github.',
-
+    -- Console
+    resource_version = '%s | v%s',
+    bridge_detected = '^2Ponte detectada e carregada.^0',
+    bridge_not_detected = '^1Ponte não detectada, por favor, certifique-se de que está em execução.^0',
+    cheater_print = 'Você tentou enganar o sistema. O sistema te enganou.',
 }
