@@ -24,7 +24,7 @@ Cfg = {
     Options = {
         NuiColor = 'violet', -- Colors: ('dark', 'gray', 'red', 'pink', 'grape', 'violet', 'indigo', 'blue', 'cyan', 'teal', 'green', 'lime', 'yellow', 'orange')
 
-        WebhookEnabled = true, -- Enable webhook logging (true: enabled, false: disabled)
+        WebhookEnabled = false, -- Enable webhook logging (true: enabled, false: disabled)
         -- Webhook URL can be set in core/server/webhook.lua
     },
     --      _      _
