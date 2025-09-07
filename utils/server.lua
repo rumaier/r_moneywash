@@ -53,7 +53,7 @@ function SendWebhook(src, event, fields)
                 color = 0x2C1B47,
                 image = { url = 'https://i.ibb.co/vVMnc6Y/wide.png' },
                 fields = {
-                    { name = _L('player_id'),   value = '`' .. srcId .. '`',     inline = true },
+                    { name = _L('player_id'),   value = '`' .. src .. '`',     inline = true },
                     { name = _L('username'),    value = '`' .. srcName .. '`', inline = true },
                     { name = utf8.char(0x200B), value = utf8.char(0x200B),     inline = true },
                     table.unpack(fields or {})
