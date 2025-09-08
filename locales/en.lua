@@ -17,14 +17,16 @@ Language['en'] = { -- English
     marked_worth = 'Worth: $%s',
     taxed_offer = 'You will receive $%s after a %s%% tax.',
     counting_money = 'Counting Money...',
-
     entering = 'Entering Money Wash...',
     exiting = 'Exiting Money Wash...',
 
     -- Webhook
     player_id = 'Player ID',
     username = 'Username',
-    identifier = 'Identifier',
+    money_washed = 'Money Washed',
+    money_given = 'Money Given',
+    money_received = 'Money Received',
+    tax_rate = 'Tax Rate',
 
     -- Console
     resource_version = '%s | v%s',
