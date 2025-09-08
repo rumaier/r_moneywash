@@ -4,5 +4,5 @@ local framework = Core.Framework.Current
 
 local onPlayerLoaded = framework == 'es_extended' and 'esx:playerLoaded' or 'QBCore:Client:OnPlayerLoaded'
 RegisterNetEvent(onPlayerLoaded, function()
-    -- initialize shit when the player loads
+    InitializeMoneywash()
 end)

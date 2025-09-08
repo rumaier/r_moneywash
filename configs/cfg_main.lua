@@ -47,9 +47,9 @@ Cfg = {
             min = 100,                  -- Minimum amount of money that can be washed, does not apply when currency = 'markedbills'
             max = 10000,                -- Maximum amount of money that can be washed, does not apply when currency = 'markedbills'
             tax = 20,                   -- Tax percentage (0-100)
-            dynamicTax = false,         -- Dynamic tax based on amount washed (true: enabled, false: disabled)
+            dynamicTax = true,         -- Dynamic tax based on amount washed (true: enabled, false: disabled)
             taxChangeTimer = 60,        -- Time in minutes for tax to change when dynamicTax is enabled
-            taxChangeRange = { 5, 25 }, -- Range for tax change when dynamicTax is enabled (min, max)
+            taxChangeRange = { 5, 10 }, -- Range for tax change when dynamicTax is enabled (min, max)
             timer = 10,                 -- Time in seconds to wash money
             cooldown = 30,              -- Cooldown time in minutes between washes
         },

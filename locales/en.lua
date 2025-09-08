@@ -1,6 +1,26 @@
 Language = Language or {}
 Language['en'] = { -- English
 
+    -- Notifications
+    notify_title = 'Money Wash',
+    insufficient_funds = 'You do not have enough to wash.',
+    on_cooldown = 'You must wait %s minutes after washing before you can wash again.',
+    wash_successful = 'You have successfully washed funds worth $%s.',
+    
+    -- Target Options
+    wash_money = 'Wash Money',
+    teleporter_enter = 'Enter Money Wash',
+    teleporter_exit = 'Exit Money Wash',
+
+    -- UI Elements
+    wash_amount = 'Amount to Wash',
+    marked_worth = 'Worth: $%s',
+    taxed_offer = 'You will receive $%s after a %s%% tax.',
+    counting_money = 'Counting Money...',
+
+    entering = 'Entering Money Wash...',
+    exiting = 'Exiting Money Wash...',
+
     -- Webhook
     player_id = 'Player ID',
     username = 'Username',
