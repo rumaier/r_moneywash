@@ -42,7 +42,6 @@ end)
 function SendWebhook(src, event, fields)
     if not Cfg.Options.WebhookEnabled then return end
     local srcName = src > 0 and GetPlayerName(src) or 'Server'
-    local srcId = src > 0 and Core.Framework.getPlayerIdentifier(src) or 'N/A'
     PerformHttpRequest(Cfg.WebhookUrl, function()
     end, 'POST', json.encode({
         username = 'Resource Logs',
