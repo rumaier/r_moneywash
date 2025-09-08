@@ -10,7 +10,7 @@ local function taskGiveMoneyAnimation()
     Core.Natives.playAnimation(cache.ped, 'mp_common', 'givetake1_a', -1, 0, 0.0)
     Core.Natives.playAnimation(entities.moneywashPed, 'mp_common', 'givetake1_a', -1, 1, 0.0)
     Wait(750)
-    AttachEntityToEntity(entities.cashProp, entities.moneywashPed, GetPedBoneIndex(entities.moneywashPed, 28422), 0, 0, 0, 168.93, -83.80, 76.29, true, true, false, true, 2, true)
+    AttachEntityToEntity(entities.cashProp, entities.moneywashPed, GetPedBoneIndex(entities.moneywashPed, 28422), -0.015, -0.009, -0.013, 109.850, 0, 0, true, true, false, true, 2, true)
     Core.Natives.playAnimation(entities.moneywashPed, 'amb@code_human_wander_texting_fat@male@base', 'static', -1, 1, 0.0)
 end
 
@@ -56,7 +56,7 @@ local function giveExchangeOffer(amount)
     local given = type(amount) == 'table' and amount.worth or amount
     local offer = math.ceil(given - (given * (taxRate / 100)))
     local alert = lib.alertDialog({
-        header = _L('money_wash'),
+        header = _L('wash_money'),
         content = _L('taxed_offer', offer, taxRate),
         centered = true,
         cancel = true
@@ -138,7 +138,7 @@ local function teleportToEntrance()
             label = _L('exiting'),
             position = 'bottom',
             canCancel = false,
-            anim = { dict = 'timetable@jimmy@doorknock@', clip = 'knockdoor_idle' },
+            anim = { dict = 'mp_common', clip = 'givetake1_a' },
             disable = { move = true, combat = true, }
         }) then
         Core.Target.removeZone(targets.exit)
