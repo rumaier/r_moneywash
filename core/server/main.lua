@@ -2,11 +2,11 @@ local washing = {}
 local cooldowns = {}
 local taxRate = Cfg.Options.MoneyWash.tax
 
-lib.callback.register('r_moneywash:setPlayerCooldown', function(src)
+local function setPlayerCooldown(src)
     local duration = Cfg.Options.MoneyWash.cooldown
     cooldowns[src] = true
     SetTimeout(duration * 60000, function() cooldowns[src] = nil end)
-end)
+end
 
 lib.callback.register('r_moneywash:canPlayerWash', function(src)
     local wash = Cfg.Options.MoneyWash
@@ -62,6 +62,14 @@ lib.callback.register('r_moneywash:getMarkedBillItems', function(src)
     return markedbills
 end)
 
+local function isPlayerNearMoneywash(src)
+    local player = GetPlayerPed(src)
+    local coords = GetEntityCoords(player)
+    local washCoords = Cfg.Options.WashPed.location.xyz
+    local distance = #(coords - washCoords)
+    return distance <= 10.0
+end
+
 lib.callback.register('r_moneywash:removeMoney', function(src, amount)
     local wash = Cfg.Options.MoneyWash
     local item = wash.currency
@@ -76,10 +84,28 @@ lib.callback.register('r_moneywash:removeMoney', function(src, amount)
     end
 end)
 
+local function sendWashLog(src, amount)
+    local rate = taxRate
+    local originalAmount = math.floor(amount / (1 - (rate / 100)))
+    SendWebhook(src, _L('money_washed'), {
+        { name = _L('money_given'),    value = '`$' .. originalAmount .. '`', inline = true },
+        { name = _L('tax_rate'),       value = '`' .. rate .. '%`', inline = true },
+        { name = _L('money_received'), value = '`$' .. amount .. '`', inline = true },
+    })
+end
+
 lib.callback.register('r_moneywash:addMoney', function(src)
+    if not isPlayerNearMoneywash(src) then return false, _debug('[^1ERROR^0] - Player is not near money wash ped, possible exploit attempt.') end
     if not washing[src] then return false, _debug('[^1ERROR^0] - Playing not found in washing table, possible exploit attempt.') end
     if cooldowns[src] then return false, _debug('[^1ERROR^0] - Player is still on cooldown, possible exploit attempt.') end
-    local added = Core.Framework.addAccountBalance(src, 'cash', washing[src])
+    local balance = Core.Framework.getAccountBalance(src, 'cash') or 0
+    Core.Framework.addAccountBalance(src, 'cash', washing[src])
+    local newBalance = Core.Framework.getAccountBalance(src, 'cash') or 0
+    local added = newBalance == (balance + washing[src])
+    if not added then return false, _debug('[^1ERROR^0] - Failed to add funds to player ' .. src .. '') end
+    setPlayerCooldown(src)
+    added = washing[src]
     washing[src] = nil
+    sendWashLog(src, added)
     return added
 end)
