@@ -30,9 +30,3 @@ dependencies {
   'ox_lib',
   'r_bridge',
 }
-
-escrow_ignore {
-  'install/**/*.*',
-  'locales/*.*',
-  'configs/*.lua',
-}
