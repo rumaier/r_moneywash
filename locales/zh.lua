@@ -1,47 +1,37 @@
 Language = Language or {}
-Language['zh'] = { -- Chinese
+Language['zh'] = { -- Simplified Chinese
 
-    -- 目标选项
-    enter_moneywash = '进入洗钱点',
-    exit_moneywash = '离开洗钱点',
-
+    -- Notifications
+    notify_title = '洗钱',
+    insufficient_funds = '你没有足够的钱进行洗钱。',
+    on_cooldown = '洗钱后你必须等待%s分钟才能再次洗钱。',
+    wash_successful = '你已成功洗钱 $%s。',
+    
+    -- Target Options
     wash_money = '洗钱',
-
-    -- 通知
-    on_cooldown = '你刚刚洗过钱，稍后再来。',
-    washed_money = '你洗了 $%s，扣除 %s%% 税后收到 $%s。',
-    not_enough_money = '你没有足够的钱来清洗。',
-
-    -- 进度条
-    entering_moneywash = '正在进入洗钱点...',
-    exiting_moneywash = '正在离开洗钱点...',
-
-    giving_money = '交出现金...',
-    counting_money = '清点现金...',
-
-    -- 菜单标题
-    money_wash = '洗钱',
-
-    -- 菜单选项
-    wash_amount = '你想洗多少钱？',
-
-    -- 菜单副标题
-    taxed_offer = '扣除 %s%% 税后，你将收到 $%s。',
+    teleporter_enter = '进入洗钱点',
+    teleporter_exit = '离开洗钱点',
+    
+    -- UI Elements
+    wash_amount = '洗钱金额',
     marked_worth = '价值: $%s',
-
-    -- Discord Webhook
+    taxed_offer = '扣除%s%%税后你将获得$%s。',
+    counting_money = '正在清点钱...',
+    entering = '正在进入洗钱点...',
+    exiting = '正在离开洗钱点...',
+    
+    -- Webhook
     player_id = '玩家ID',
     username = '用户名',
-    identifier = '标识符',
-    description = '描述',
-    description_text = '%s 洗了 $%s，扣除 %s%% 税后收到 $%s。',
-
-    -- 服务器控制台
-    version = '%s | 版本 %s',
-    framework = '框架: %s',
-    inventory = '库存: %s',
-    target = '目标: %s',
-    cheater = '因作弊被踢。',
-    update = '请从Github更新 %s 到最新版本。',
-
+    money_washed = '洗钱金额',
+    money_given = '给予金额',
+    money_received = '收到金额',
+    tax_rate = '税率',
+    
+    -- Console
+    resource_version = '%s | v%s',
+    bridge_detected = '^2桥接已检测并加载。^0',
+    bridge_not_detected = '^1未检测到桥接，请确保它正在运行。^0',
+    cheater_print = '你试图智取系统。系统反过来智取了你。',
+    debug_enabled = '^1调试模式已开启！请勿在生产环境运行！^0',
 }

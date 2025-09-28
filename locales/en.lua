@@ -1,46 +1,37 @@
 Language = Language or {}
 Language['en'] = { -- English
 
-    -- Target Options
-    enter_moneywash = 'Enter Money Wash',
-    exit_moneywash = 'Exit Money Wash',
-    
-    wash_money = 'Wash Money',
-
     -- Notifications
-    on_cooldown = 'You just washed money, come back later.',
-    washed_money = 'You washed $%s and received $%s after a %s%% tax deduction.',
-    not_enough_money = 'You do not have enough money to wash.',
+    notify_title = 'Money Wash',
+    insufficient_funds = 'You do not have enough to wash.',
+    on_cooldown = 'You must wait %s minutes after washing before you can wash again.',
+    wash_successful = 'You have successfully washed funds worth $%s.',
+    
+    -- Target Options
+    wash_money = 'Wash Money',
+    teleporter_enter = 'Enter Money Wash',
+    teleporter_exit = 'Exit Money Wash',
 
-    -- Progress Bars
-    entering_moneywash = 'Entering Money Wash...',
-    exiting_moneywash = 'Exiting Money Wash...',
-
-    giving_money = 'Handing Over Money...',
-    counting_money = 'Counting Money...',
-
-    -- Menu Titles
-    money_wash = 'Money Wash',
-
-    -- Menu Options
-    wash_amount = 'How much do you want to clean?',
-
-    -- Menu Subtitles
-    taxed_offer = 'You will receive $%s after a %s%% tax deduction.',
+    -- UI Elements
+    wash_amount = 'Amount to Wash',
     marked_worth = 'Worth: $%s',
+    taxed_offer = 'You will receive $%s after a %s%% tax.',
+    counting_money = 'Counting Money...',
+    entering = 'Entering Money Wash...',
+    exiting = 'Exiting Money Wash...',
 
-    -- Discord Webhook
+    -- Webhook
     player_id = 'Player ID',
     username = 'Username',
-    identifier = 'Identifier',
-    description = 'Description',
-    description_text = '%s washed $%s and received $%s after a %s%% tax deduction.',
+    money_washed = 'Money Washed',
+    money_given = 'Money Given',
+    money_received = 'Money Received',
+    tax_rate = 'Tax Rate',
 
-    -- Server Console
-    version = '%s | v%s',
-    framework = 'Framework: %s',
-    inventory = 'Inventory: %s',
-    target = 'Target: %s', 
-    cheater = 'Kicked for cheating.',
-    update = 'Please update %s to the latest version from Github.',
+    -- Console
+    resource_version = '%s | v%s',
+    bridge_detected = '^2Bridge detected and loaded.^0',
+    bridge_not_detected = '^1Bridge not detected, please ensure it is running.^0',
+    cheater_print = 'You tried to outsmart the system. The system outsmarted you.',
+    debug_enabled = '^1Debug mode is ON! Do NOT run this in production!^0',
 }
