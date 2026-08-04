@@ -13,6 +13,9 @@ Language['en'] = {
     washed = 'You washed %s and received %s.',
     on_cooldown = 'You must wait %s minutes before washing again.',
     no_funds = 'You do not have enough funds to wash.',
+    money_given = 'Money Given',
+    tax_rate = 'Tax Rate',
+    money_received = 'Money Received',
     server_id = 'Server ID',
     username = 'Username',
 

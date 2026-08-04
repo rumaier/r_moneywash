@@ -35,12 +35,6 @@ local function loadClientConfig()
     TriggerEvent(resource .. ':clientConfigLoaded')
 end
 
-local function buildNuiConfig()
-    return {
-        NuiColor = Cfg.NuiColor,
-    }
-end
-
 function NormalizeTarget(data)
     if type(data) ~= 'table' then
         return {
@@ -50,18 +44,5 @@ function NormalizeTarget(data)
     end
     return data
 end
-
-RegisterNUICallback('setNuiFocus', function(focus, cb)
-    SetNuiFocus(focus, focus)
-    cb(IsNuiFocused())
-end)
-
-RegisterNUICallback('fetchLocales', function(_, cb)
-    cb(Language[Cfg.Language or 'en'])
-end)
-
-RegisterNUICallback('fetchConfig', function(_, cb)
-    cb(buildNuiConfig())
-end)
 
 loadClientConfig()

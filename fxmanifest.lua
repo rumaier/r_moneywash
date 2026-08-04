@@ -26,12 +26,6 @@ client_scripts {
     'core/client/main.lua',
 }
 
-ui_page 'web/dist/index.html'
-files {
-    'web/dist/index.html',
-    'web/dist/**/*',
-}
-
 dependencies {
     'ox_lib',
     'r_bridge',
