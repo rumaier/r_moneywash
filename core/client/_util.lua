@@ -1,0 +1,67 @@
+Cfg = Cfg or {}
+
+local resource = GetCurrentResourceName()
+
+local function loadClientConfig()
+    local config
+    for attempt = 1, 10 do
+        local success, response = pcall(lib.callback.await, resource .. ':getClientConfig', false)
+        if success and type(response) == 'table' then
+            config = response
+            break
+        end
+        Wait(attempt * 250)
+    end
+    if not config then
+        print('^1[' .. resource .. ']^0 Failed to load client config; retrying in the background')
+        CreateThread(function()
+            while true do
+                Wait(1000)
+                local success, response = pcall(lib.callback.await, resource .. ':getClientConfig', false)
+                if success and type(response) == 'table' then
+                    for key, value in pairs(response) do
+                        Cfg[key] = value
+                    end
+                    TriggerEvent(resource .. ':clientConfigLoaded')
+                    return
+                end
+            end
+        end)
+        return
+    end
+    for key, value in pairs(config) do
+        Cfg[key] = value
+    end
+    TriggerEvent(resource .. ':clientConfigLoaded')
+end
+
+local function buildNuiConfig()
+    return {
+        NuiColor = Cfg.NuiColor,
+    }
+end
+
+function NormalizeTarget(data)
+    if type(data) ~= 'table' then
+        return {
+            entity = data,
+            coords = GetEntityCoords(data),
+        }
+    end
+    return data
+end
+
+RegisterNUICallback('setNuiFocus', function(focus, cb)
+    SetNuiFocus(focus, focus)
+    cb(IsNuiFocused())
+end)
+
+RegisterNUICallback('fetchLocales', function(_, cb)
+    cb(Language[Cfg.Language or 'en'])
+end)
+
+RegisterNUICallback('fetchConfig', function(_, cb)
+    cb(buildNuiConfig())
+end)
+
+loadClientConfig()

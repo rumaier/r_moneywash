@@ -1,220 +1,228 @@
-local blip = nil
-local point = nil
-local targets = {}
-local entities = {}
+local teleporters = {}
+local spawner = nil
+local ped = nil
+local prop = nil
 
-local function taskGiveMoneyAnimation()
-    local prop = 'prop_anim_cash_pile_02'
-    entities.cashProp = Core.Natives.createObject(prop, vec3(0, 0, 0), 0, false)
-    AttachEntityToEntity(entities.cashProp, cache.ped, 90, 0.003, 0.008, 0.015, 44.108, 29.315, 20.733, true, true, false, true, 2, true)
-    Core.Natives.playAnimation(cache.ped, 'mp_common', 'givetake1_a', -1, 0, 0.0)
-    Core.Natives.playAnimation(entities.moneywashPed, 'mp_common', 'givetake1_a', -1, 1, 0.0)
-    Wait(750)
-    AttachEntityToEntity(entities.cashProp, entities.moneywashPed, GetPedBoneIndex(entities.moneywashPed, 28422), -0.015, -0.009, -0.013, 109.850, 0, 0, true, true, false, true, 2, true)
-    Core.Natives.playAnimation(entities.moneywashPed, 'amb@code_human_wander_texting_fat@male@base', 'static', -1, 1, 0.0)
-end
-
-local function taskNpcGiveEnvelopeAnimation()
-    local prop = 'prop_cash_envelope_01'
-    entities.envelopeProp = Core.Natives.createObject(prop, vec3(0, 0, 0), 0, false)
-    AttachEntityToEntity(entities.envelopeProp, entities.moneywashPed, GetPedBoneIndex(entities.moneywashPed, 28422), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, true, true, false, true, 2, true)
-    Core.Natives.playAnimation(cache.ped, 'mp_common', 'givetake1_a', -1, 1, 0.0)
-    Core.Natives.playAnimation(entities.moneywashPed, 'mp_common', 'givetake1_a', -1, 0, 0.0)
-    Wait(750)
-    AttachEntityToEntity(entities.envelopeProp, cache.ped, GetPedBoneIndex(cache.ped, 57005), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, true, true, false, true, 2, true)
-    Core.Natives.playAnimation(cache.ped, 'melee@holster', 'holster', -1, 0, 0.0)
-    DeleteEntity(entities.envelopeProp)
-end
-
-local function triggerMoneywash(amount)
-    taskGiveMoneyAnimation()
-    local removed = lib.callback.await('r_moneywash:removeMoney', false, amount)
-    if not removed then _debug('[^6DEBUG^0] - Failed to remove currency item from player.') return end
-    amount = type(amount) == 'table' and amount.worth or amount
-    local duration = Cfg.Options.MoneyWash.timer * 1000
-    if lib.progressCircle({
+local function enterExitAnim(direction)
+    local label = direction == 'enter' and locale('knocking') or locale('leaving')
+    local anim = direction == 'enter' and { dict = 'timetable@jimmy@doorknock@', clip = 'knockdoor_idle' } or { dict = 'mp_common', clip = 'givetake1_a' }
+    local duration = direction == 'enter' and 1500 or 1000
+    return bridge.interface.progress({
         duration = duration,
-        label = _L('counting_money'),
+        label = label,
         position = 'bottom',
         canCancel = false,
-        disable = { move = true, combat = true }
+        anim = anim,
+        disable = { move = true, combat = true },
+    })
+end
+
+local function takeMoneyAnims()
+    assert(ped, 'Ped is not defined')
+    local pedHand = GetPedBoneIndex(ped, 28422)
+    prop = bridge.natives.createObject('prop_cash_envelope_01', vec3(0, 0, 0), 0, false)
+    AttachEntityToEntity(prop, ped, pedHand, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, true, true, false, true, 2, true)
+    bridge.natives.playAnimation(ped, 'mp_common', 'givetake1_a', -1, 0, 0.0)
+    bridge.natives.playAnimation(cache.ped, 'mp_common', 'givetake1_b', -1, 0, 0.0)
+    Wait(750)
+    AttachEntityToEntity(prop, cache.ped, 90, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, true, true, false, true, 2, true)
+    bridge.natives.playAnimation(cache.ped, 'melee@holster', 'holster', -1, 0, 0.0)
+    DeleteEntity(prop)
+    prop = nil
+end
+
+local function giveMoneyAnims()
+    assert(ped, 'Ped is not defined')
+    prop = bridge.natives.createObject('prop_anim_cash_pile_02', vec3(0, 0, 0), 0, false)
+    AttachEntityToEntity(prop, cache.ped, 90, 0.003, 0.008, 0.015, 44.108, 29.315, 20.733, true, true, false, true, 2, true)
+    bridge.natives.playAnimation(cache.ped, 'mp_common', 'givetake1_a', -1, 0, 0.0)
+    bridge.natives.playAnimation(ped, 'mp_common', 'givetake1_b', -1, 0, 0.0)
+    Wait(750)
+    local pedHand = GetPedBoneIndex(ped, 28422)
+    AttachEntityToEntity(prop, ped, pedHand, -0.015, -0.009, -0.013, 109.850, 0, 0, true, true, false, true, 2, true)
+    Wait(250)
+    bridge.natives.playAnimation(ped, 'amb@code_human_wander_texting_fat@male@base', 'static', -1, 1, 0.0)
+end
+
+local function washMoney(amount)
+    giveMoneyAnims()
+    local duration = Cfg.WashTimer * 1000
+    if bridge.interface.progress({
+        duration = duration,
+        label = locale('counting'),
+        position = 'bottom',
+        canCancel = false,
+        disable = { move = true, combat = true, vehicle = true },
     }) then
-        StopAnimTask(cache.ped, 'amb@code_human_wander_texting_fat@male@base', 'static', 1.0)
-        Core.Natives.playAnimation(entities.moneywashPed, 'melee@holster', 'holster', -1, 0, 0.0)
-        DeleteEntity(entities.cashProp)
+        assert(ped, 'Ped is not defined')
+        assert(prop, 'Prop is not defined')
+        local resp = lib.callback.await('r_moneywash:wash', false, amount)
+        if not resp.success then log('error', 'Failed to wash money, check server console for more information') return end
+        StopAnimTask(ped, 'amb@code_human_wander_texting_fat@male@base', 'static', 1.0)
+        bridge.natives.playAnimation(ped, 'melee@holster', 'holster', -1, 0, 0.0)
+        DeleteEntity(prop)
         Wait(500)
-        taskNpcGiveEnvelopeAnimation()
-        local added = lib.callback.await('r_moneywash:addMoney', false)
-        if not added then _debug('[^6DEBUG^0] - Failed to give player funds, check server console for details.') return end
-        Core.Interface.notify(_L('notify_title'), _L('wash_successful', added), 'success')
-        _debug('[^6DEBUG^0] - Successfully washed funds worth:', amount, 'after tax:', added)
+        takeMoneyAnims()
+        bridge.interface.notify(locale('moneywash'), locale('washed', amount, resp.received), 'success')
+        log('debug', 'Washed ' .. amount .. ' and received ' .. resp.received)
     end
 end
 
-local function giveExchangeOffer(amount)
-    local taxRate = lib.callback.await('r_moneywash:getCurrentTaxRate', false)
-    local given = type(amount) == 'table' and amount.worth or amount
-    local offer = math.ceil(given - (given * (taxRate / 100)))
+local function givePlayerOffer(amount)
+    log('debug', 'givePlayerOffer(' .. amount .. ')')
+    local tax = lib.callback.await('r_moneywash:getTax', false)
+    local offer = math.ceil(amount - (amount * (tax / 100)))
     local alert = lib.alertDialog({
-        header = _L('wash_money'),
-        content = _L('taxed_offer', offer, taxRate),
+        header = locale('moneywash'),
+        content = locale('offer', offer, tax),
         centered = true,
         cancel = true
     })
     if alert == 'cancel' then
-        PlayPedAmbientSpeechNative(entities.moneywashPed, 'Generic_Insult_Med', 'Speech_Params_Force')
+        assert(ped, 'Ped is not defined')
+        PlayPedAmbientSpeechNative(ped, 'GENERIC_INSULT_MED', 'SPEECH_PARAMS_FORCE')
+    else
+        washMoney(amount)
+    end
+end
+
+local function openMarkedBillSelection()
+    local options = lib.callback.await('r_moneywash:getMarkedBills', false)
+    if not options or #options == 0 then return end
+    for k, v in pairs(options) do
+        local worth = v.metadata.worth
+        v.title = v.label
+        v.description = locale('worth', worth)
+        v.icon = 'fas fa-sack-dollar'
+        v.iconColor = '#fa5252'
+        v.onSelect = function()
+            givePlayerOffer(worth)
+        end
+        v.metadata = nil
+    end
+    bridge.interface.registerContext({ id = 'moneywash', title = locale('moneywash'), options = options })
+    log('debug', 'Marked bill selection menu built with ' .. #options .. ' options')
+    bridge.interface.showContext('moneywash')
+end
+
+local function openInput()
+    assert(ped, 'Ped is not defined')
+    local resp = lib.callback.await('r_moneywash:canWash', false)
+    if not resp.canWash then
+        PlayPedAmbientSpeechNative(ped, 'GENERIC_INSULT_MED', 'SPEECH_PARAMS_FORCE')
+        bridge.interface.notify(locale('moneywash'), locale(resp.err), 'error')
         return
     end
-    triggerMoneywash(amount)
-end
-
-local function openMarkedBillsMenu()
-    local options = {}
-    local items = lib.callback.await('r_moneywash:getMarkedBillItems', false)
-    if not items then _debug('[^1ERROR^0] - Failed to retrieve marked bills from player inventory.') return end
-    for _, item in pairs(items) do
-        table.insert(options, {
-            title = item.label,
-            description = _L('marked_worth', item.metadata.worth),
-            icon = 'fas fa-money-bill-wave',
-            iconColor = '#fa5252',
-            onSelect = function()
-                giveExchangeOffer(item.metadata)
-            end
-        })
-    end
-    Core.Interface.registerContext({ id = 'markedbill_menu', title = _L('wash_money'), options = options })
-    _debug('[^6DEBUG^0] - Built marked bills menu with', #options, 'options, opening...')
-    Core.Interface.showContext('markedbill_menu')
-end
-
-local function openMoneywashInput()
-    local canWash, reason = lib.callback.await('r_moneywash:canPlayerWash', false) -- reason will return item count if canWash is true
-    if not canWash then Core.Interface.notify(_L('notify_title'), reason, 'error') return end
-    ClearPedTasks(entities.moneywashPed)
-    PlayPedAmbientSpeechNative(entities.moneywashPed, 'Generic_Hows_It_Going', 'Speech_Params_Force')
-    local wash = Cfg.Options.MoneyWash
-    local isMarkedBills = wash.currency == 'markedbills'
-    if isMarkedBills then openMarkedBillsMenu() return end
-    local input = lib.inputDialog(_L('wash_money'), {
-        { type = 'number', label = _L('wash_amount'), icon = 'dollar-sign', required = true, min = wash.min, max = math.min(reason, wash.max) }
+    PlayPedAmbientSpeechNative(ped, 'GENERIC_HOWS_IT_GOING', 'SPEECH_PARAMS_FORCE')
+    if Cfg.Currency == 'markedbills' then openMarkedBillSelection() return end
+    local input = bridge.interface.input(locale('moneywash'), {
+        { type = 'number', label = locale('amount'), icon = 'dollar-sign', required = true, default = Cfg.MinAmount, min = Cfg.MinAmount, max = math.min(Cfg.MaxAmount, resp.count or 0)}
     })
-    if not input then return end
-    _debug('[^6DEBUG^0] - Player input received:', input[1])
-    giveExchangeOffer(tonumber(input[1]))
+    if not input or #input == 0 then return end
+    givePlayerOffer(tonumber(input[1]))
 end
 
-local function spawnMoneywashPed()
-    if entities.moneywashPed and DoesEntityExist(entities.moneywashPed) then return end
-    local pedCfg = Cfg.Options.WashPed
-    entities.moneywashPed = Core.Natives.createPed(pedCfg.model, pedCfg.location.xyz, pedCfg.location.w, false)
-    Core.Natives.setEntityProperties(entities.moneywashPed, true, true, true)
-    TaskStartScenarioInPlace(entities.moneywashPed, 'WORLD_HUMAN_CLIPBOARD', 0, true)
-    Core.Target.addLocalEntity(entities.moneywashPed, {
+local function despawnPed()
+    assert(ped, 'Ped is not defined')
+    bridge.target.removeLocalEntity(ped)
+    DeleteEntity(ped)
+    ped = nil
+    log('debug', 'Moneywash ped despawned')
+end
+
+local function spawnPed()
+    if ped then despawnPed() end
+    local cfg = Cfg.Ped
+    ped = bridge.natives.createPed(cfg.model, cfg.coords.xyz, cfg.coords.w, false)
+    TaskStartScenarioInPlace(ped, 'WORLD_HUMAN_CLIPBOARD', 0, true)
+    bridge.natives.setPedInert(ped, true)
+    bridge.target.addLocalEntity(ped, {
         {
-            label = _L('wash_money'),
-            icon = 'fas fa-money-bill-wave',
-            distance = 1.5,
-            onSelect = openMoneywashInput
+            label = locale('moneywash'),
+            icon = 'fas fa-money-bill',
+            distance = 1.0,
+            onSelect = openInput
         }
     })
-    _debug('[^6DEBUG^0] - Moneywash ped spawned at:', pedCfg.location)
+    log('debug', 'Moneywash ped spawned at: ' .. cfg.coords)
 end
 
-local function despawnMoneywashPed()
-    if entities.moneywashPed and DoesEntityExist(entities.moneywashPed) then
-        Core.Target.removeLocalEntity(entities.moneywashPed)
-        DeleteEntity(entities.moneywashPed)
-        entities.moneywashPed = nil
-        _debug('[^6DEBUG^0] - Moneywash ped despawned.')
+local function enterMoneywash(target)
+    target = NormalizeTarget(target)
+    TaskTurnPedToFaceCoord(cache.ped, target.coords.x, target.coords.y, target.coords.z, -1)
+    repeat Wait(0) until bridge.natives.isPedFacingCoord(cache.ped, target.coords)
+    ClearPedTasks(cache.ped)    
+    if enterExitAnim('enter') then
+        local coords = Cfg.TeleportExit.coords
+        bridge.natives.teleportPlayer(coords.xyz, coords.w)
     end
 end
 
-local function teleportToEntrance()
-    local teleporter = Cfg.Options.Teleporter
-    TaskAchieveHeading(cache.ped, teleporter.exit.w, -1)
-    if lib.progressCircle({
-            duration = 1500,
-            label = _L('exiting'),
-            position = 'bottom',
-            canCancel = false,
-            anim = { dict = 'mp_common', clip = 'givetake1_a' },
-            disable = { move = true, combat = true, }
-        }) then
-        Core.Target.removeZone(targets.exit)
-        targets.exit = nil
-        DoScreenFadeOut(750)
-        Wait(800)
-        StartPlayerTeleport(cache.playerId, teleporter.enter.xyz, teleporter.enter.w - 180.0, false, true, true)
-        Wait(300)
-        DoScreenFadeIn(375)
+local function exitMoneywash(target)
+    target = NormalizeTarget(target)
+    TaskTurnPedToFaceCoord(cache.ped, target.coords.x, target.coords.y, target.coords.z, -1)
+    repeat Wait(0) until bridge.natives.isPedFacingCoord(cache.ped, target.coords)
+    ClearPedTasks(cache.ped)
+    if enterExitAnim('exit') then
+        local coords = Cfg.TeleportEnter.coords
+        bridge.natives.teleportPlayer(coords.xyz, coords.w)
     end
 end
 
-local function teleportToMoneywash()
-    local teleporter = Cfg.Options.Teleporter
-    TaskAchieveHeading(cache.ped, teleporter.enter.w, -1)
-    if lib.progressCircle({
-        duration = 1500,
-        label = _L('entering'),
-        position = 'bottom',
-        canCancel = false,
-        anim = { dict = 'timetable@jimmy@doorknock@', clip = 'knockdoor_idle' },
-        disable = { move = true, combat = true, }
-        }) then
-        DoScreenFadeOut(750)
-        Wait(800)
-        StartPlayerTeleport(cache.playerId, teleporter.exit.xyz, teleporter.exit.w - 180.0, false, true, true)
-        Wait(300)
-        DoScreenFadeIn(375)
+local function initializeMoneywash()
+    local blip = Cfg.Blip
+    local ped = Cfg.Ped
+    spawner = lib.points.new({
+        coords = ped.coords.xyz,
+        heading = ped.coords.w,
+        distance = 150.0,
+        onEnter = spawnPed,
+        onExit = despawnPed
+    })
+    if blip.enabled then
+        local blipCoords = Cfg.TeleportEnter.target
+        bridge.natives.createBlip(blipCoords, blip.sprite, blip.color, blip.scale, locale('moneywash'))
+        log('debug', 'Moneywash blip created at: ' .. tostring(blipCoords))
     end
+    log('debug', 'Moneywash spawner initialized at: ' .. tostring(ped.coords.xyz))
 end
 
 local function initializeTeleporters()
-    local teleporter = Cfg.Options.Teleporter
-    if not teleporter.enabled then return end
-    targets.entrance = Core.Target.addBoxZone(teleporter.enter.xyz, vec3(1.5, 1.0, 3.0), teleporter.enter.w, {
+    if not Cfg.EnableTeleport or teleporters.enter then return end
+    local debug = Cfg.Debug
+    local enter = Cfg.TeleportEnter
+    teleporters.enter = bridge.target.addZone(enter.target, 0.5, {
         {
-            label = _L('teleporter_enter'),
-            icon = 'fas fa-money-bill-wave',
-            distance = 1.5,
-            onSelect = teleportToMoneywash
+            label = locale('knock'),
+            icon = 'fas fa-door-open',
+            distance = 1.0,
+            onSelect = enterMoneywash
         }
-    }, Cfg.Debug)
-    _debug('[^6DEBUG^0] - Teleporter entrance set at:', teleporter.enter)
-    targets.exit = Core.Target.addBoxZone(teleporter.exit.xyz, vec3(1.5, 1.0, 3.0), teleporter.exit.w, {
+    }, debug)
+    log('debug', 'Entrance teleporter initialized at: ' .. tostring(enter.target))
+    local exit = Cfg.TeleportExit
+    teleporters.exit = bridge.target.addZone(exit.target, 0.5, {
         {
-            label = _L('teleporter_exit'),
-            icon = 'fas fa-money-bill-wave',
-            distance = 1.5,
-            onSelect = teleportToEntrance
+            label = locale('exit'),
+            icon = 'fas fa-person-walking-arrow-right',
+            distance = 1.0,
+            onSelect = exitMoneywash
         }
-    }, Cfg.Debug)
-    _debug('[^6DEBUG^0] - Teleporter exit set at:', teleporter.exit)
+    }, debug)
+    log('debug', 'Exit teleporter initialized at: ' .. tostring(exit.target))
 end
 
-function InitializeMoneywash()
+local function onClientReady()
     initializeTeleporters()
-    local blipCfg = Cfg.Options.Blip
-    local pedCfg = Cfg.Options.WashPed
-    point = lib.points.new({ 
-        coords = pedCfg.location.xyz, 
-        distance = 100.0,
-        onEnter = spawnMoneywashPed,
-        onExit = despawnMoneywashPed
-    })
-    if blipCfg.enabled then
-        blip = Core.Natives.createBlip(pedCfg.location, blipCfg.sprite, blipCfg.color, blipCfg.scales, blipCfg.label)
-        _debug('[^6DEBUG^0] - Moneywash blip created at:', pedCfg.location)
-    end
-    _debug('[^6DEBUG^0] - Moneywash point initialized at:', pedCfg.location)
+    initializeMoneywash()
 end
+
+AddEventHandler('r_bridge:playerLoaded', onClientReady)
+AddEventHandler(GetCurrentResourceName() .. ':clientConfigLoaded', onClientReady)
 
 AddEventHandler('onResourceStop', function(resource)
-    if resource == GetCurrentResourceName() then
-        for _, target in pairs(targets) do Core.Target.removeZone(target) end
-        for _, entity in pairs(entities) do DeleteEntity(entity) end
-        if blip then Core.Natives.removeBlip(blip) end
-        if point then point:remove() end
+    if resource ~= GetCurrentResourceName() then return end
+    for _, t in pairs(teleporters) do
+        bridge.target.removeZone(t)
     end
 end)
