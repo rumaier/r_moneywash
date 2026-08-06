@@ -2,24 +2,10 @@ math = lib.math
 
 local resource = GetCurrentResourceName()
 local RATE_LIMIT_MS = 1000
+local WASH_COOLDOWN_MS = (Cfg.WashCooldown or 0) * 60000
 
-local rateLimits = {}
-local cooldowns = {}
 local washing = {}
 local tax = Cfg.WashTax
-
-local function getRateLimitKey(src, action)
-    return ('%s:%s'):format(src, action)
-end
-
-local function isRateLimited(src, action, duration)
-    local last = rateLimits[getRateLimitKey(src, action)]
-    return last and GetGameTimer() - last < duration
-end
-
-local function setRateLimit(src, action)
-    rateLimits[getRateLimitKey(src, action)] = GetGameTimer()
-end
 
 local function getBalance(src, currency)
     return bridge.framework.getBalance(src, currency)
@@ -36,16 +22,10 @@ local function removeBalanceVerified(src, account, amount)
     return getBalance(src, account) <= before - amount
 end
 
-local function setCooldown(src)
-    cooldowns[src] = os.time() + (Cfg.WashCooldown * 60)
-end
-
 local function getCooldownMinutes(src)
-    local expires = cooldowns[src]
-    if not expires then return 0 end
-    local remaining = expires - os.time()
+    local remaining = GetCooldownRemaining(src, 'wash', WASH_COOLDOWN_MS)
     if remaining <= 0 then return 0 end
-    return math.ceil(remaining / 60)
+    return math.ceil(remaining / 60000)
 end
 
 local function isPlayerInRange(src)
@@ -111,8 +91,8 @@ lib.callback.register('r_moneywash:getTax', function()
 end)
 
 lib.callback.register('r_moneywash:getMarkedBills', function(src)
-    if isRateLimited(src, 'getMarkedBills', RATE_LIMIT_MS) then return {} end
-    setRateLimit(src, 'getMarkedBills')
+    if IsRateLimited(src, 'getMarkedBills', RATE_LIMIT_MS) then return {} end
+    SetRateLimit(src, 'getMarkedBills')
 
     local info = bridge.inventory.getItemInfo(Cfg.Currency)
     local label = (info and (info.label or info.name)) or Cfg.Currency
@@ -132,10 +112,10 @@ lib.callback.register('r_moneywash:getMarkedBills', function(src)
 end)
 
 lib.callback.register('r_moneywash:canWash', function(src)
-    if isRateLimited(src, 'canWash', RATE_LIMIT_MS) then
+    if IsRateLimited(src, 'canWash', RATE_LIMIT_MS) then
         return { canWash = false }
     end
-    setRateLimit(src, 'canWash')
+    SetRateLimit(src, 'canWash')
 
     local minutes = getCooldownMinutes(src)
     if minutes > 0 then
@@ -158,10 +138,10 @@ lib.callback.register('r_moneywash:canWash', function(src)
 end)
 
 lib.callback.register('r_moneywash:wash', function(src, amount, slot)
-    if isRateLimited(src, 'wash', RATE_LIMIT_MS) then
+    if IsRateLimited(src, 'wash', RATE_LIMIT_MS) then
         return failWash(src, 'rate limited')
     end
-    setRateLimit(src, 'wash')
+    SetRateLimit(src, 'wash')
 
     if washing[src] then
         return failWash(src, 'already washing')
@@ -207,7 +187,7 @@ lib.callback.register('r_moneywash:wash', function(src, amount, slot)
     end
 
     -- Lock the wash window before mutating to prevent double-payout races.
-    setCooldown(src)
+    SetCooldown(src, 'wash')
 
     local removed = false
     if currency == 'markedbills' then
@@ -220,7 +200,7 @@ lib.callback.register('r_moneywash:wash', function(src, amount, slot)
     end
 
     if not removed then
-        cooldowns[src] = nil
+        ClearCooldown(src, 'wash')
         return finish(failWash(src, 'failed to remove dirty money'))
     end
 
@@ -234,7 +214,7 @@ lib.callback.register('r_moneywash:wash', function(src, amount, slot)
         else
             bridge.framework.addBalance(src, currency, washAmount)
         end
-        cooldowns[src] = nil
+        ClearCooldown(src, 'wash')
         return finish(failWash(src, 'failed to add clean cash'))
     end
 
@@ -260,14 +240,7 @@ lib.callback.register(resource .. ':getClientConfig', function()
 end)
 
 AddEventHandler('playerDropped', function()
-    local src = source
-    cooldowns[src] = nil
-    washing[src] = nil
-    for key in pairs(rateLimits) do
-        if key:match('^' .. src .. ':') then
-            rateLimits[key] = nil
-        end
-    end
+    washing[source] = nil
 end)
 
 AddEventHandler('onResourceStart', function(started)
