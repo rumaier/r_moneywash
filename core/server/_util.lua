@@ -34,6 +34,22 @@ function GetCooldownRemaining(src, action, duration)
     return remaining
 end
 
+lib.callback.register(resource .. ':getClientConfig', function()
+    return {
+        Language = Cfg.Language,
+        Debug = Cfg.Debug,
+        EnableTeleport = Cfg.EnableTeleport,
+        TeleportEnter = Cfg.TeleportEnter,
+        TeleportExit = Cfg.TeleportExit,
+        Blip = Cfg.Blip,
+        Ped = Cfg.Ped,
+        Currency = Cfg.Currency,
+        MinAmount = Cfg.MinAmount,
+        MaxAmount = Cfg.MaxAmount,
+        WashTimer = Cfg.WashTimer,
+    }
+end)
+
 local function checkVersion()
     if not Cfg.VersionCheck then return end
     bridge.version.check(resource)

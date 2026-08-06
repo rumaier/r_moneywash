@@ -223,22 +223,6 @@ lib.callback.register('r_moneywash:wash', function(src, amount, slot)
     return finish({ success = true, received = taxedAmount })
 end)
 
-lib.callback.register(resource .. ':getClientConfig', function()
-    return {
-        Language = Cfg.Language,
-        Debug = Cfg.Debug,
-        EnableTeleport = Cfg.EnableTeleport,
-        TeleportEnter = Cfg.TeleportEnter,
-        TeleportExit = Cfg.TeleportExit,
-        Blip = Cfg.Blip,
-        Ped = Cfg.Ped,
-        Currency = Cfg.Currency,
-        MinAmount = Cfg.MinAmount,
-        MaxAmount = Cfg.MaxAmount,
-        WashTimer = Cfg.WashTimer,
-    }
-end)
-
 AddEventHandler('playerDropped', function()
     washing[source] = nil
 end)
