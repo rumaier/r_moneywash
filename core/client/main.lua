@@ -280,7 +280,11 @@ local function onClientReady()
 end
 
 AddEventHandler('r_bridge:playerLoaded', onClientReady)
-AddEventHandler(GetCurrentResourceName() .. ':clientConfigLoaded', onClientReady)
+
+AddEventHandler(GetCurrentResourceName() .. ':clientConfigLoaded', function()
+    if not bridge.framework.isPlayerLoaded() then return end
+    onClientReady()
+end)
 
 AddEventHandler('onResourceStop', function(stopped)
     if stopped ~= GetCurrentResourceName() then return end
