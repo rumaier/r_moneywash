@@ -1,37 +1,25 @@
 Language = Language or {}
-Language['zh'] = { -- Simplified Chinese
+Language['zh'] = {
 
-    -- Notifications
-    notify_title = '洗钱',
-    insufficient_funds = '你没有足够的钱进行洗钱。',
-    on_cooldown = '洗钱后你必须等待%s分钟才能再次洗钱。',
-    wash_successful = '你已成功洗钱 $%s。',
-    
-    -- Target Options
-    wash_money = '洗钱',
-    teleporter_enter = '进入洗钱点',
-    teleporter_exit = '离开洗钱点',
-    
-    -- UI Elements
-    wash_amount = '洗钱金额',
-    marked_worth = '价值: $%s',
-    taxed_offer = '扣除%s%%税后你将获得$%s。',
-    counting_money = '正在清点钱...',
-    entering = '正在进入洗钱点...',
-    exiting = '正在离开洗钱点...',
-    
-    -- Webhook
-    player_id = '玩家ID',
-    username = '用户名',
-    money_washed = '洗钱金额',
-    money_given = '给予金额',
-    money_received = '收到金额',
+    moneywash = '洗钱',
+    amount = '金额',
+    worth = '价值：$%s',
+    knock = '敲门',
+    exit = '离开',
+    knocking = '敲门中...',
+    leaving = '离开中...',
+    counting = '清点中...',
+    offer = '你将收到 $%s，税率为 %s%%。',
+    washed = '你洗了 %s，并收到了 %s。',
+    on_cooldown = '你必须等待 %s 分钟后才能再次洗钱。',
+    no_funds = '你没有足够的资金进行洗钱。',
+    money_given = '交付金额',
     tax_rate = '税率',
-    
-    -- Console
-    resource_version = '%s | v%s',
-    bridge_detected = '^2桥接已检测并加载。^0',
-    bridge_not_detected = '^1未检测到桥接，请确保它正在运行。^0',
-    cheater_print = '你试图智取系统。系统反过来智取了你。',
-    debug_enabled = '^1调试模式已开启！请勿在生产环境运行！^0',
+    money_received = '收到金额',
+    server_id = '服务器 ID',
+    username = '用户名',
+
+    bridge_loaded = '桥接加载成功。',
+    update_bridge = '请将 r_bridge 更新到 v3.0.0 或更高版本！',
+    debug_enabled = '调试模式已开启！请勿在生产环境中使用！',
 }

@@ -1,37 +1,25 @@
 Language = Language or {}
-Language['pt'] = { -- Portuguese
+Language['pt'] = {
 
-    -- Notifications
-    notify_title = 'Lavagem de Dinheiro',
-    insufficient_funds = 'Você não tem dinheiro suficiente para lavar.',
-    on_cooldown = 'Você deve esperar %s minutos após lavar antes de poder lavar novamente.',
-    wash_successful = 'Você lavou fundos no valor de $%s.',
-    
-    -- Target Options
-    wash_money = 'Lavar Dinheiro',
-    teleporter_enter = 'Entrar na Lavagem de Dinheiro',
-    teleporter_exit = 'Sair da Lavagem de Dinheiro',
-    
-    -- UI Elements
-    wash_amount = 'Quantia para lavar',
-    marked_worth = 'Valor: $%s',
-    taxed_offer = 'Você receberá $%s após uma taxa de %s%%.',
-    counting_money = 'Contando dinheiro...',
-    entering = 'Entrando na Lavagem de Dinheiro...',
-    exiting = 'Saindo da Lavagem de Dinheiro...',
-    
-    -- Webhook
-    player_id = 'ID do Jogador',
-    username = 'Nome de usuário',
-    money_washed = 'Dinheiro lavado',
-    money_given = 'Dinheiro dado',
+    moneywash = 'Lavagem de dinheiro',
+    amount = 'Quantia',
+    worth = 'Valor: $%s',
+    knock = 'Bater',
+    exit = 'Sair',
+    knocking = 'Batendo...',
+    leaving = 'Saindo...',
+    counting = 'Contando...',
+    offer = 'Você receberá $%s após uma taxa de %s%%.',
+    washed = 'Você lavou %s e recebeu %s.',
+    on_cooldown = 'Você deve esperar %s minutos antes de lavar novamente.',
+    no_funds = 'Você não tem fundos suficientes para lavar.',
+    money_given = 'Dinheiro entregue',
+    tax_rate = 'Taxa',
     money_received = 'Dinheiro recebido',
-    tax_rate = 'Taxa de imposto',
-    
-    -- Console
-    resource_version = '%s | v%s',
-    bridge_detected = '^2Ponte detectada e carregada.^0',
-    bridge_not_detected = '^1Ponte não detectada, por favor, certifique-se de que está em execução.^0',
-    cheater_print = 'Você tentou enganar o sistema. O sistema te enganou.',
-    debug_enabled = '^1Modo debug ATIVADO! Não execute isso em produção!^0',
+    server_id = 'ID do servidor',
+    username = 'Nome de usuário',
+
+    bridge_loaded = 'Bridge carregado com sucesso.',
+    update_bridge = 'Por favor, atualize o r_bridge para v3.0.0 ou superior!',
+    debug_enabled = 'O modo de depuração está ATIVADO! NÃO use isso em produção!',
 }
